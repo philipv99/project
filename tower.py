@@ -1,5 +1,13 @@
 import pyglet as glet
-from pyglet import shapes
+from pyglet.math import Vec2
+
+
+image_tower_1 = glet.image.load('assets/img/turret_1.png')
+image_tower_1.anchor_x = image_tower_1.width // 2
+image_tower_1.anchor_y = image_tower_1.height // 2
+
+
+
 
 class Tank():
    _width = 120
@@ -28,10 +36,6 @@ class Tank():
    def draw(self):
       self._classBatch.draw()
 
-   def update(self):
-      self.radius.update()
-      self.barral.update()
-
    def rotate(self, dec: int):
       if dec > 2 : 
          dec = 2
@@ -39,3 +43,15 @@ class Tank():
          dec = -2
       self.barral.rotation += dec
       self.body_house.rotation += dec
+
+
+class Tower_1_test(glet.sprite.Sprite):
+   def __init__(self, x, y, batch=None, group=None):
+      self.cost = 100
+      self.range = 300
+      super(Tower_1_test, self).__init__(img = image_tower_1, x = x, y = y, batch=batch, group=group)
+      self.anchor_x = 'center'
+      self.anchor_y = 'center'
+      self.radius = glet.shapes.Circle(x=x, y=y, radius=self.range, color=[255, 0, 0, 50], batch=batch, group=group)
+
+

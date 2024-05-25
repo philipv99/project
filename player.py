@@ -1,5 +1,7 @@
 import pyglet as glet
 import setup
+import tower
+from pyglet.math import Vec2
 
 _game_difficulty_player_stats = [
    #hp,  gold, start round
@@ -20,7 +22,7 @@ class Player:
       self._hp = _game_difficulty_player_stats[self.difficulty][0]
       self._gold = _game_difficulty_player_stats[self.difficulty][1]
       self._Round = _game_difficulty_player_stats[self.difficulty][2]
-
+      self.player_towers = []
       self.player_group = group
       self.player_batch = batch
 
@@ -56,11 +58,34 @@ class Player:
 
    def player_take_points(self, points: int):
       """take points from player"""
-      self.gold -= points
-      self.Gold_label.text += str(self._gold) + self._gold_Life
+      self._gold -= points
+      self.Gold_label.text = str(self._gold) + self._text_points
 
    def player_give_points(self, points: int):
       """give points to player"""
-      self.gold += points
-      self.Gold_label.text += str(self._gold) + self._gold_Life
+      self._gold += points
+      self.Gold_label.text = str(self._gold) + self._text_points
       
+   def add_tower(self, tower, map:list):
+      # can afford tower
+      if self._gold < tower.cost:
+         raise Exception("cant afford tower")
+      
+      # on map roud
+      # for coord1, corrd2 in zip(map[0:-1], map[1:]):
+      #    steps_x = [x for x in range(coord1.x, corrd2.x, 40)]
+      #    steps_y = [x for x in range(coord1.y, corrd2.y, 40)]
+         
+               
+      # dicdence to other towers
+      for t in self.player_towers:
+         tx = range(t._x - (t.width // 2), t._x + (t.width // 2))
+         ty = range(t._y - (t.height // 2), t._y + (t.height // 2))
+         if tower._x in tx and tower._y in ty:
+            raise Exception("to cloce to other tower")
+      self.player_take_points(tower.cost)
+      self.player_towers.append(tower)
+
+   def Tower_update(self, dt, enemy_list:list):
+      for T in self.player_towers:
+         T.update(dt, enemy_list)

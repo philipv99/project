@@ -16,11 +16,21 @@ class myButton(glet.gui.PushButton):
                      batch= batch,
                      group= group)
       self.toggle = False
-      
+   
    def on_press(self):
-      self.toggle = self.toggle
+      if self.toggle:
+         self.toggle = False
+         self._pressed = False
+      else:
+         self.toggle = True
+         self._pressed = True
       print(f"t1 pressed, {self.toggle}")
 
-   def on_release(self):
-      print("t1 depressed")
+
+   def place_tower(self, x:int, y:int):
+      if x > setup._screen_width:
+         print("cant place here")
+         return False
+      else:
+         return True
       

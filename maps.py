@@ -51,10 +51,10 @@ List_of_game_maps = [
       "bg_color"   : (150, 230, 100, 255),
       "path_color" : (170, 145, 130, 255),
       "map_path"   : [
-         (Vec2(map_segment_x*4   , map_segment_y*4 )), # start, out of bound
-         (Vec2(map_segment_x*6  , map_segment_y*4 )), 
-         (Vec2(map_segment_x*6   , map_segment_y*6)), 
-         (Vec2(map_segment_x*4   , map_segment_y*6)),
+         (Vec2(int(map_segment_x*4)   , int(map_segment_y*4))), # start, out of bound
+         (Vec2(int(map_segment_x*6)   , int(map_segment_y*4))), 
+         (Vec2(int(map_segment_x*6)   , int(map_segment_y*6))), 
+         (Vec2(int(map_segment_x*4)   , int(map_segment_y*6))),
          ] # end, out of bound
    },
 ]

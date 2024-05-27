@@ -44,7 +44,7 @@ lines = glet.shapes.MultiLine(coordinates=chossen_map['map_path'], thickness=set
 
 #enemy
 enemy_holder = enemy.Enemy_group(densetey=7)
-enemy_holder.Auto_Fill_list(number_of_enemys= 1,
+enemy_holder.Auto_Fill_list(number_of_enemys= 15,
                            map=chossen_map['map_path'],
                            player=player,
                            gr_group=enemy_group,

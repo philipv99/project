@@ -8,4 +8,4 @@ _font_size_mid = 18
 _font_size_text = 16
 _UI_margin = 30
 _UI_margin_y = 40
-_game_difficulty = 0
+_game_difficulty = 2

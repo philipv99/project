@@ -6,17 +6,25 @@ image_tower_1 = glet.image.load('assets/img/turret_1.png')
 image_tower_1.anchor_x = image_tower_1.width // 2
 image_tower_1.anchor_y = image_tower_1.height // 2
 
+image_tower_2 = glet.image.load('assets/img/turret_2.png')
+image_tower_2.anchor_x = image_tower_2.width // 2
+image_tower_2.anchor_y = image_tower_2.height // 2
+
 
 class turret_1(glet.sprite.Sprite):
+   _image_tower = image_tower_1
+   _cost      = 100
+   _range     = 200
+   _cool_down = 2
+   _damage    = 1
    def __init__(self, x, y, batch=None, group=None, group_gui=None):
-      self.cost = 100
-      self.range = 200
-      self.cool_down = 2
-      self.current_cool_down_time = 5.0
-      self.damage = 1
-      self.target = None
-      self.target_to_shoot = None
-      super(turret_1, self).__init__(img = image_tower_1, x = x, y = y, batch=batch, group=group)
+      self.cost      = self._cost 
+      self.range     = self._range
+      self.cool_down = self._cool_down
+      self.damage    = self._damage
+      self.ready     = True
+      self.target    = None
+      super(turret_1, self).__init__(img = self._image_tower, x = x, y = y, batch=batch, group=group)
       self.anchor_x = 'center'
       self.anchor_y = 'center'
       self.radius = glet.shapes.Circle(x=x, y=y, radius=self.range, color=[255, 0, 0, 40], batch=batch, group=group_gui)
@@ -25,17 +33,11 @@ class turret_1(glet.sprite.Sprite):
       self.draw()
       self.radius.draw()
 
-   def update(self, dt, enemy_list):
-      if self.target_to_shoot is not None:
-         self.shoot_2()
-         self.target_to_shoot = None
-      if self.current_cool_down_time < self.cool_down:
-         self.current_cool_down_time += dt
-      self.pick_target(enemy_list)
-      if self.target is not None and self.current_cool_down_time >= self.cool_down:
-         self.shoot_target()
-      else:
-         print(self.target , "True" if self.current_cool_down_time >= 2 else "False")
+   def update(self, enemy_group):
+      self.pick_target(enemy_group.enemy_list)
+      if self.target is not None and self.ready is True:
+         self.shoot_target(enemy_group)
+
          
 
    def pick_target(self, enemy_list):
@@ -48,19 +50,31 @@ class turret_1(glet.sprite.Sprite):
          # if enemy is in range 200 set as target
          dist = math.sqrt(x_desince ** 2 + y_desince ** 2)
          if self.range < dist:
-            self.target = None
+            glet.clock.schedule_once( self.target_none, 1/60 )
          else: # find target to shoot
             self.rotation = math.degrees(math.atan2(x_desince, y_desince))
             self.target = enemy
             break
 
-   def shoot_target(self):
-      self.target_to_shoot = self.target
+   def shoot_target(self, enemy_group):
+      enemy_group.shoot_target_enemy(self.target , self.damage)
+      self.target = None
+      self.ready = False
+      glet.clock.schedule_once( self.target_none, 1/10 )
+      glet.clock.schedule_once( self.turret_ready, self.cool_down )
+
+   def target_none(self, dt):
       self.target = None
 
-   def shoot_2(self):
-      self.target_to_shoot.take_damage(self.damage)
-      self.current_cool_down_time = 0
-      print("shot enemy")
-      self.target_to_shoot = None
-      
+   def turret_ready(self, dt):
+      self.ready = True
+
+
+class turret_2(turret_1):
+   _image_tower = image_tower_2
+   _cost      = 400
+   _range     = 400
+   _cool_down = 5
+   _damage    = 10
+   def __init__(self, x, y, batch=None, group=None, group_gui=None):
+      super().__init__(x = x, y = y, batch=batch, group=group, group_gui=group_gui)
